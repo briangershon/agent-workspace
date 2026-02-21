@@ -10,7 +10,7 @@ Claude Code by default. Customize to install any coding agent you want.
 
 1. Clone this template repository
 
-2. Ask Claude Code to help you understand and customize this project. It'll read CLAUDE.md automatically. Or if using a different agent, ask it to first read `CLAUDE.md`.
+2. Ask Claude Code to help you understand and customize this project. It'll read `CLAUDE.md` automatically. Or if customizing using a different agent, ask it to first read `CLAUDE.md`.
 
 3. Build and run the container
 

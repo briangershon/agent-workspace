@@ -19,8 +19,25 @@ This is a Docker-based AI agent workspace template. When a user asks for help cu
 ### 3. System Packages
 
 - File: `Dockerfile`, `apt-get install` block
-- Add packages your project needs (e.g., python3, ripgrep, gh, awscli)
+- Add packages your project needs (e.g., python3, awscli)
 - Remove packages you don't need to reduce image size
+
+#### Installed Tools
+
+The following tools are pre-installed because they directly support Claude Code:
+
+| Tool         | Why it helps Claude Code                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| `git`        | Version control - used by Claude Code's built-in git operations (commit, diff, log, etc.) |
+| `gh`         | GitHub CLI - used by Claude Code for PR/issue workflows (create PRs, view issues, etc.) |
+| `ripgrep`    | Fast file search - Claude Code's Grep tool uses `rg` for significantly faster codebase searches |
+| `jq`         | JSON processor - useful for parsing API responses and config files in agent workflows    |
+| `tmux`       | Terminal multiplexer - run multiple sessions; useful when agent needs to run a server and interact with it |
+| `vim`        | Text editor - fallback editor available in container shell                               |
+| `curl`       | HTTP client - used by Claude Code installer and useful in agent scripts                  |
+| `bubblewrap` | Sandboxing - Claude Code uses this for its bash tool sandbox (required for safe command execution) |
+| `socat`      | Socket relay - Claude Code uses this internally for MCP server connections               |
+| `tini`       | Init process - ensures clean signal handling and zombie process reaping in the container |
 
 ### 4. Base Docker Image
 
