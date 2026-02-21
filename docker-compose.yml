@@ -1,0 +1,20 @@
+name: agent-workspace
+
+services:
+  agent:
+    build: .
+    stdin_open: true
+    tty: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./home/agent:/home/agent
+      - ./workspace:/workspace
+    networks:
+      - agent-network
+
+networks:
+  agent-network:
+    driver: bridge
