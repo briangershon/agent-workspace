@@ -52,6 +52,7 @@ This is a Docker-based AI agent workspace template. When a user asks for help cu
 - Avoid installing untrusted third-party binaries directly in the agent container — they would have access to credentials and the host mount
 - Instead, add a sibling service to `docker-compose.yml` that serves the tool via an API, keeping it isolated from the agent container
 - See: https://github.com/briangershon/agent-tools-at-arms-length
+- For trusted services such as PostgreSQL it's also simple to add it as a sibling service in `docker-compose.yml` so it runs alongside the agent on a shared Docker network.
 
 ### 9. Skills
 
