@@ -10,10 +10,16 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./home/agent:/home/agent
+      # Named volume: persists agent auth tokens and config across restarts.
+      # WARNING: deleted permanently by `docker compose down -v`.
+      - agent-home:/home/agent
+      # Bind mount: your project files on the host. Always safe across restarts.
       - ./workspace:/workspace
     networks:
       - agent-network
+
+volumes:
+  agent-home:
 
 networks:
   agent-network:
