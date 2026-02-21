@@ -10,10 +10,13 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./home/agent:/home/agent
+      - agent-home:/home/agent
       - ./workspace:/workspace
     networks:
       - agent-network
+
+volumes:
+  agent-home:
 
 networks:
   agent-network:

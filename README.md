@@ -1,10 +1,10 @@
 # agent workspace
 
-Create a safe workspace for your AI agent project.
+A safe workspace for your AI agent project.
 
-Run your whole agent environment safely in a Docker container isolated from your host machine.
+Run your AI agent environment safely in a Docker container isolated from your host machine.
 
-Installs Claude Code, but you can customize it to install any coding agent you want.
+Installs Claude Code by default, but you can customize it to install any coding agent you want.
 
 ## Setup
 
