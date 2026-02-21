@@ -1,34 +1,30 @@
 # agent workspace
 
-A safe workspace for your AI agent project.
+A safe workspace for your AI agent projects.
 
-Run your AI agent environment safely in a Docker container isolated from your host machine.
+Your AI agent runs in a Docker container isolated from your host machine.
 
-Installs Claude Code by default, but you can customize it to install any coding agent you want.
+Claude Code by default. Customize to install any coding agent you want.
 
 ## Setup
 
-Clone this template repository.
+1. Clone this template repository
 
-Ask Claude Code to help you understand and customize this project. It'll read CLAUDE.md automatically.
+2. Ask Claude Code to help you understand and customize this project. It'll read CLAUDE.md automatically. Or if using a different agent, ask it to first read `CLAUDE.md`.
 
-Or if using a different agent, ask it to first read `CLAUDE.md`.
-
-Build and run the container:
+3. Build and run the container
 
 ```bash
 docker-compose up --build
 ```
 
-Connect to your container:
-
-> If your editor supports terminals, such as VSCode you may want to use that so everything is in one place
+4. Connect to your container
 
 ```bash
 ./open-terminal.sh
 ```
 
-Inside the container, you can run your agent or other code:
+5. Inside the container, you can run your agent or other code
 
 ```bash
 claude
