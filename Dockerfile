@@ -16,8 +16,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata \
     ncurses-term \
     locales \
-  && locale-gen en_US.UTF-8 \
+    locales-all \
   && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV COLORTERM=truecolor
 
 ENV TZ=America/Los_Angeles
 
@@ -40,8 +44,6 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 RUN echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bashrc \
  && echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bash_profile
 ENV PATH="/home/agent/.local/bin:${PATH}"
-ENV COLORTERM=truecolor
-ENV LANG=en_US.UTF-8
 
 WORKDIR /workspace
 
