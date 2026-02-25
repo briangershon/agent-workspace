@@ -1,12 +1,14 @@
-# agent workspace
+# Agent Workspace
 
-A safe workspace for your AI agent projects.
+## Features
 
-Your AI agent runs in a Docker container isolated from your host machine.
+- a safe workspace for your AI agent projects
+- your AI agent runs in a Docker container isolated from your host machine
+- installs Claude Code by default, but you can install any coding agent you want
 
-Claude Code by default. Customize to install any coding agent you want.
+## Customize
 
-**See `CLAUDE.md` for full customization options** (coding agent, packages, volumes, networking, skills, and more). Use Claude Code to customize your agent's environment and capabilities.
+- **Use Claude Code to customize environment and capabilities**. Run Claude Code and it automatically reads `CLAUDE.md` with information on how to customize.
 
 ## What you get
 
@@ -20,7 +22,29 @@ Claude Code by default. Customize to install any coding agent you want.
 - Docker
 - Docker Compose
 
-## Optional: Git Diff Tools
+## Setup and Running Container
+
+1. Clone this template repository
+
+2. Build and run the container
+
+```bash
+docker-compose up --build
+```
+
+3. Connect to your container
+
+```bash
+./open-terminal.sh
+```
+
+4. Inside the container, you can run your agent and other tools
+
+```bash
+claude
+```
+
+## Optional Tools: Git Diff Tools
 
 Manually install on your host machine where you're performing diffs, or in container.
 
@@ -60,29 +84,3 @@ GIT_EXTERNAL_DIFF=difft git diff
 ```
 
 Then run `git difft` or `git difft HEAD~1` for semantic diffs when needed.
-
-## Setup and Running Container
-
-1. Clone this template repository
-
-2. Build and run the container
-
-```bash
-docker-compose up --build
-```
-
-3. Connect to your container
-
-```bash
-./open-terminal.sh
-```
-
-4. Inside the container, you can run your agent or other code
-
-```bash
-claude
-```
-
-> **Warning:** Running `docker compose down -v` will delete the `agent-home` named volume,
-> permanently removing your agent auth tokens and config. Your `workspace/` files are
-> unaffected (they are bind-mounted to your local filesystem).
