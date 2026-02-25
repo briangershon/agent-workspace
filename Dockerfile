@@ -66,7 +66,8 @@ RUN npm i @ast-grep/cli -g
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV COLORTERM=truecolor
-ENV TZ=America/Los_Angeles  # customize: your timezone
+# customize: your timezone
+ENV TZ=America/Los_Angeles
 
 USER agent
 
