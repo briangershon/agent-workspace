@@ -1,49 +1,75 @@
 FROM node:24-slim
 
+# =============================================================
+# CUSTOMIZATION POINTS (see CLAUDE.md for full details):
+#   FROM        - change base image (e.g. python:3.12-slim)
+#   apt-get     - add/remove system packages below
+#   ENV TZ      - set your timezone
+#   npm install - add global npm tools
+# =============================================================
+
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Minimal deps for Claude Code installer only (rarely changes -> good cache anchor)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    tmux \
     ca-certificates \
     curl \
-    tini \
-    vim \
-    git \
-    ripgrep \
-    bubblewrap \
-    socat \
-    jq \
-    tzdata \
-    ncurses-term \
-    locales \
-    locales-all \
   && rm -rf /var/lib/apt/lists/*
 
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-ENV COLORTERM=truecolor
+# Create unprivileged user early
+RUN useradd -m -s /bin/bash agent
 
-ENV TZ=America/Los_Angeles
+USER agent
+
+# Install Claude Code as agent user (cached unless lines above change)
+RUN curl -fsSL https://claude.ai/install.sh | bash
+RUN echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bashrc \
+ && echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bash_profile
+ENV PATH="/home/agent/.local/bin:${PATH}"
+
+# Switch back to root for remaining system packages
+# Adding packages here does NOT invalidate the Claude Code layer above
+USER root
 
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
   && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
     | tee /etc/apt/sources.list.d/github-cli.list \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends gh \
+  && apt-get update && apt-get install -y --no-install-recommends \
+    # --- Core: required by Claude Code (keep these) ---
+    tini \
+    git \
+    gh \
+    ripgrep \
+    bubblewrap \
+    socat \
+    tzdata \
+    ncurses-term \
+    locales \
+    locales-all \
+    # --- Optional defaults: add/remove for your project ---
+    tmux \
+    vim \
+    jq \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python-is-python3 \
+    shellcheck \
   && rm -rf /var/lib/apt/lists/*
 
-# Create unprivileged user
-RUN useradd -m -s /bin/bash agent
+RUN npm i @ast-grep/cli -g
+# Add more global npm tools here if needed:
+# RUN npm i -g your-tool
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV COLORTERM=truecolor
+# customize: your timezone
+ENV TZ=America/Los_Angeles
 
 USER agent
-
-# Install Claude Code as agent user
-RUN curl -fsSL https://claude.ai/install.sh | bash
-RUN echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bashrc \
- && echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bash_profile
-ENV PATH="/home/agent/.local/bin:${PATH}"
 
 WORKDIR /workspace
 
