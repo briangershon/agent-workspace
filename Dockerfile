@@ -1,5 +1,13 @@
 FROM node:24-slim
 
+# =============================================================
+# CUSTOMIZATION POINTS (see CLAUDE.md for full details):
+#   FROM        - change base image (e.g. python:3.12-slim)
+#   apt-get     - add/remove system packages below
+#   ENV TZ      - set your timezone
+#   npm install - add global npm tools
+# =============================================================
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Minimal deps for Claude Code installer only (rarely changes -> good cache anchor)
@@ -29,19 +37,21 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
     | tee /etc/apt/sources.list.d/github-cli.list \
   && apt-get update && apt-get install -y --no-install-recommends \
-    tmux \
+    # --- Core: required by Claude Code (keep these) ---
     tini \
-    vim \
     git \
     gh \
     ripgrep \
     bubblewrap \
     socat \
-    jq \
     tzdata \
     ncurses-term \
     locales \
     locales-all \
+    # --- Optional defaults: add/remove for your project ---
+    tmux \
+    vim \
+    jq \
     python3 \
     python3-pip \
     python3-venv \
@@ -50,11 +60,13 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
   && rm -rf /var/lib/apt/lists/*
 
 RUN npm i @ast-grep/cli -g
+# Add more global npm tools here if needed:
+# RUN npm i -g your-tool
 
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV COLORTERM=truecolor
-ENV TZ=America/Los_Angeles
+ENV TZ=America/Los_Angeles  # customize: your timezone
 
 USER agent
 
