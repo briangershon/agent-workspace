@@ -1,6 +1,6 @@
 # Agent Workspace
 
-This is a Docker-based AI agent workspace template. When a user asks for help customizing this project, guide them through the options below.
+This is a Docker-based AI agent workspace template. To customize it, start with `Dockerfile` - it has a `CUSTOMIZATION POINTS` comment block at the top that outlines the main areas to change. The sections below explain each option in detail.
 
 ## Customization Options
 
