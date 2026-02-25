@@ -17,7 +17,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ncurses-term \
     locales \
     locales-all \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python-is-python3 \
+    shellcheck \
   && rm -rf /var/lib/apt/lists/*
+
+RUN npm i @ast-grep/cli -g
 
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -25,6 +32,7 @@ ENV COLORTERM=truecolor
 
 ENV TZ=America/Los_Angeles
 
+# install GitHub cli
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
   && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \

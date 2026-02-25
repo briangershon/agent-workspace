@@ -20,6 +20,22 @@ Claude Code by default. Customize to install any coding agent you want.
 - Docker
 - Docker Compose
 
+## Optional: difftastic
+
+Install on your host machine where you're performings diffs and make it your default `git diff` tool.
+
+```bash
+# on OSX run:
+brew install difftastic
+```
+
+If you want to use difftastic as your default diff tool, add the following to your `~/.gitconfig`.
+
+```ini
+[diff]
+external = difft
+```
+
 ## Setup
 
 1. Clone this template repository
