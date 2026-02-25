@@ -10,33 +10,58 @@ Claude Code by default. Customize to install any coding agent you want.
 
 ## What you get
 
-- Isolated Docker container - agent cannot access your host system
-- Persistent home volume for agent config and auth tokens across restarts
-- Pre-installed tools: git, gh, ripgrep, jq, tmux, curl, vim
+- Pre-installed tools for Claude Code to use
+- Isolated Docker container - agent cannot access your host system except for your project files
 - Bind-mounted `workspace/` folder on your host for project files
+- Docker volume for home folder (`/home/agent`) so agent config and auth tokens persist across restarts
 
 ## Prerequisites
 
 - Docker
 - Docker Compose
 
-## Optional: difftastic
+## Optional: Git Diff Tools
 
-Install on your host machine where you're performings diffs and make it your default `git diff` tool.
+Manually install on your host machine where you're performing diffs, or in container.
+
+`git-delta` provides a nice side-by-side diff view and works as a pager. `difftastic` provides a more semantic diff that understands code structure for complex analysis.
 
 ```bash
 # on OSX run:
+brew install git-delta
 brew install difftastic
 ```
 
-If you want to use difftastic as your default diff tool, add the following to your `~/.gitconfig`.
+### git-delta as default diff pager (recommended)
+
+Add to `~/.gitconfig`:
 
 ```ini
-[diff]
-external = difft
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
 ```
 
-## Setup
+### Use difft on demand
+
+```bash
+# One-off difft usage
+GIT_EXTERNAL_DIFF=difft git diff
+
+# Or add a git alias to ~/.gitconfig
+[alias]
+    difft = "!f() { GIT_EXTERNAL_DIFF=difft git diff \"$@\"; }; f"
+```
+
+Then run `git difft` or `git difft HEAD~1` for semantic diffs when needed.
+
+## Setup and Running Container
 
 1. Clone this template repository
 
