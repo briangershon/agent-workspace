@@ -4,7 +4,9 @@
 
 - a safe workspace for your AI agent projects
 - your AI agent runs in a Docker container isolated from your host machine
-- installs Claude Code by default, but you can install any coding agent you want
+- installs Claude Code by default -- though you can install any coding agent you want
+- installs Anthropic's `skill-creator` to make it easy to create new skills
+- installs [`skill-copy`](https://github.com/briangershon/skill-copy) cli to install any skills you want from GitHub repos
 
 ## Customize
 

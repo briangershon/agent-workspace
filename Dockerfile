@@ -63,14 +63,32 @@ RUN npm i @ast-grep/cli -g
 # Add more global npm tools here if needed:
 # RUN npm i -g your-tool
 
+# Install latest Go (system-wide, all users)
+ARG TARGETARCH
+RUN set -eux; \
+    GOVERSION=$(curl -fsSL "https://go.dev/VERSION?m=text" | head -1); \
+    curl -fsSL "https://go.dev/dl/${GOVERSION}.linux-${TARGETARCH}.tar.gz" \
+      | tar -C /usr/local -xz
+
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV COLORTERM=truecolor
 # customize: your timezone
 ENV TZ=America/Los_Angeles
+ENV GOPATH=/home/agent/go
+ENV PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+
+# Install skill-copy system-wide
+USER root
+RUN GOBIN=/usr/local/bin go install github.com/briangershon/skill-copy@latest
+
+# Copy entrypoint script that auto-populates agent-home volume on first start
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 USER agent
 
 WORKDIR /workspace
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["tini", "--", "/bin/bash"]
