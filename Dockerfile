@@ -69,8 +69,20 @@ ENV COLORTERM=truecolor
 # customize: your timezone
 ENV TZ=America/Los_Angeles
 
+# Install skill-copy system-wide
+ARG TARGETARCH
+RUN LATEST=$(curl -fsSL https://api.github.com/repos/briangershon/skill-copy/releases/latest | jq -r '.tag_name') \
+  && VERSION=${LATEST#v} \
+  && curl -fsSL "https://github.com/briangershon/skill-copy/releases/download/${LATEST}/skill-copy_${VERSION}_linux_${TARGETARCH}.tar.gz" \
+      | tar -C /usr/local/bin -xz skill-copy
+
+# Copy entrypoint script that auto-populates agent-home volume on first start
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 USER agent
 
 WORKDIR /workspace
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["tini", "--", "/bin/bash"]
