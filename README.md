@@ -31,7 +31,7 @@
 2. Build and run the container
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 3. Connect to your container
