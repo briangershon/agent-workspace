@@ -65,7 +65,6 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # --- Optional defaults: add/remove for your project ---
     tmux \
-    vim \
     jq \
     python3 \
     python3-pip \
@@ -80,8 +79,16 @@ ENV COLORTERM=truecolor
 # customize: your timezone
 ENV TZ=America/Los_Angeles
 
-# Install skill-copy system-wide
 ARG TARGETARCH
+
+# Install Neovim from the latest upstream prebuilt binary (Debian's apt package lags upstream releases)
+RUN NVIM_ARCH=$( [ "$TARGETARCH" = "arm64" ] && echo arm64 || echo x86_64 ) \
+    && curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz" \
+    | tar -C /opt -xz \
+    && mv "/opt/nvim-linux-${NVIM_ARCH}" /opt/nvim \
+    && ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
+
+# Install skill-copy system-wide
 RUN LATEST=$(curl -fsSL https://api.github.com/repos/briangershon/skill-copy/releases/latest | jq -r '.tag_name') \
     && VERSION=${LATEST#v} \
     && curl -fsSL "https://github.com/briangershon/skill-copy/releases/download/${LATEST}/skill-copy_${VERSION}_linux_${TARGETARCH}.tar.gz" \

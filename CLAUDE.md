@@ -48,7 +48,7 @@ This is a Docker-based AI agent workspace template. To customize it, start with 
 | `ncurses-term`            | Terminal definitions - enables correct color and cursor behavior in the container shell            |
 | `locales` / `locales-all` | Locale support - provides UTF-8 and language encoding (required for `ENV LANG`)                    |
 | `tmux`                    | Terminal multiplexer - run multiple sessions; useful when agent needs a server and a shell at the same time |
-| `vim`                     | Text editor - fallback editor available in the container shell                                              |
+| `neovim`                  | Text editor - fallback editor available in the container shell                                              |
 | `jq`                      | JSON processor - useful for parsing API responses and config files in agent workflows                       |
 | `python3`                 | Python runtime - common dependency for agent scripts and tools                                              |
 | `python3-pip`             | Python package installer                                                                                    |
