@@ -11,10 +11,10 @@ This is a Docker-based AI agent workspace template. To customize it, start with 
 
 ### 2. Coding Agent
 
-- File: `Dockerfile`, line with `curl -fsSL https://claude.ai/install.sh | bash`
-- Current: Claude Code
-- Alternative: Replace the install command for a different agent (e.g., Aider, Codex, etc.)
-- Also update `ENV PATH` if the new agent installs to a different location
+- File: `Dockerfile`, the `claude-code` apt repo install block (signing key + `sources.list.d` entry + `apt-get install claude-code`)
+- Current: Claude Code, installed from Anthropic's apt repo (`downloads.claude.ai/claude-code/apt/stable`)
+- Alternative: Replace the install block for a different agent (e.g., Aider, Codex, etc.)
+- If the new agent doesn't install system-wide via apt, you may need to add an `ENV PATH` entry for its install location
 
 ### 3. System Packages
 

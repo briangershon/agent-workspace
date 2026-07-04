@@ -10,9 +10,9 @@ FROM node:24.18-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Deps required by Claude Code itself, plus the installer's own needs
+# Deps required by Claude Code itself, plus what its apt repo setup needs
 # (rarely changes -> good cache anchor):
-#   ca-certificates, curl - needed to run the install.sh script
+#   ca-certificates, curl - needed to fetch the claude-code apt signing key/package
 #   bubblewrap            - bash tool sandboxing
 #   socat                 - MCP server connections
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -25,17 +25,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create unprivileged user early
 RUN useradd -m -s /bin/bash agent
 
-USER agent
-
-# Install Claude Code as agent user (cached unless lines above change)
-RUN curl -fsSL https://claude.ai/install.sh | bash
-RUN echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bashrc \
-    && echo 'export PATH="/home/agent/.local/bin:$PATH"' >> /home/agent/.bash_profile
+# Claude Code's own diagnostics expect ~/.local/bin on PATH for its native binary/self-update
+# convention, even though the actual binary here comes from the apt package below (owned by root).
+RUN mkdir -p /home/agent/.local/bin && chown -R agent:agent /home/agent/.local
 ENV PATH="/home/agent/.local/bin:${PATH}"
 
-# Switch back to root for remaining system packages
-# Adding packages here does NOT invalidate the Claude Code layer above
-USER root
+# Install Claude Code via Anthropic's apt repo (signed, versioned, faster than the install
+# script, and consistent with the gh CLI apt install below). Cached unless lines above change.
+RUN install -d -m 0755 /etc/apt/keyrings \
+    && curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
+        -o /etc/apt/keyrings/claude-code.asc \
+    && echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
+        > /etc/apt/sources.list.d/claude-code.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends claude-code \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN npm i @ast-grep/cli -g
 # Add more global npm tools here if needed:
@@ -86,7 +90,8 @@ RUN NVIM_ARCH=$( [ "$TARGETARCH" = "arm64" ] && echo arm64 || echo x86_64 ) \
     && curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz" \
     | tar -C /opt -xz \
     && mv "/opt/nvim-linux-${NVIM_ARCH}" /opt/nvim \
-    && ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
+    && ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim \
+    && ln -s /opt/nvim/bin/nvim /usr/local/bin/vim
 
 # Install skill-copy system-wide
 RUN LATEST=$(curl -fsSL https://api.github.com/repos/briangershon/skill-copy/releases/latest | jq -r '.tag_name') \
