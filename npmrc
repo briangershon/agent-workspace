@@ -1,0 +1,5 @@
+; supply-chain hardening
+ignore-scripts=true
+; refuse to resolve any package version published < 3 days ago (value is in DAYS).
+min-release-age=3
+fund=false
