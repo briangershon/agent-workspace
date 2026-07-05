@@ -2,6 +2,8 @@
 
 This is a Docker-based AI agent workspace template. To customize it, start with `Dockerfile` - it has a `CUSTOMIZATION POINTS` comment block at the top that outlines the main areas to change. The sections below explain each option in detail.
 
+The `Dockerfile` is split into two stages: `base` (the template's own tooling) and `final` (your project-specific customizations, added in the commented block near the bottom). `docker compose up --build` always builds `final` since it's the last stage in the file.
+
 ## Customization Options
 
 ### 1. Project Name
@@ -24,6 +26,7 @@ This is a Docker-based AI agent workspace template. To customize it, start with 
 - The block is annotated with two sections:
   - `# --- Core: required by Claude Code (keep these) ---` - do not remove these
   - `# --- Optional defaults: add/remove for your project ---` - safe to edit
+- Project-specific packages that don't belong in the template's own list can instead be added as a new `RUN apt-get install ...` inside the `final` stage's customization block at the bottom of the Dockerfile - this keeps your additions clearly separated from the template's own packages
 
 #### Installed Tools
 
@@ -65,7 +68,7 @@ This is a Docker-based AI agent workspace template. To customize it, start with 
 
 ### 5. Environment Variables
 
-- File: `Dockerfile` (build-time) or `docker-compose.yml` under `environment:` (runtime)
+- File: `Dockerfile`'s `final` stage customization block (build-time, project-specific vars) or `base` stage `ENV` lines (template defaults like `TZ`/`LANG`), or `docker-compose.yml` under `environment:` (runtime)
 - Add API keys, config flags, or tool settings
 - For secrets, prefer `docker-compose.yml` `env_file:` pointing to a `.env` file (git-ignored)
 
