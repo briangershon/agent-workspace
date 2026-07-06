@@ -14,7 +14,8 @@ The `Dockerfile` is split into two stages: `base` (the template's own tooling) a
 ### 2. Coding Agent
 
 - File: `Dockerfile`, the `claude-code` apt repo install block (signing key + `sources.list.d` entry + `apt-get install claude-code`)
-- Current: Claude Code, installed from Anthropic's apt repo (`downloads.claude.ai/claude-code/apt/stable`)
+- Current: Claude Code, installed from Anthropic's apt repo (`downloads.claude.ai/claude-code/apt/latest`)
+- Channel: uses `latest` (not `stable`) to match Claude Code's own default update messaging (`claude update` and in-app upgrade prompts pull from `latest` by default). To pin to the more conservative `stable` channel instead, change both the path segment and the suite name in the `deb` line from `latest` to `stable`.
 - Alternative: Replace the install block for a different agent (e.g., Aider, Codex, etc.)
 - If the new agent doesn't install system-wide via apt, you may need to add an `ENV PATH` entry for its install location
 

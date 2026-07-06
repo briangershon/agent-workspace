@@ -34,10 +34,13 @@ ENV PATH="/home/agent/.local/bin:${PATH}"
 
 # Register the Claude Code and GitHub CLI apt repos (signed, versioned, faster than install
 # scripts) before a single combined apt-get update+install below. Cached unless lines above change.
+# Claude Code channel is "latest", matching Claude Code's own default update messaging.
+# To pin to the more conservative channel instead, swap "latest" for "stable" in the deb line below
+# (both the path segment and the suite name).
 RUN install -d -m 0755 /etc/apt/keyrings \
     && curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
     -o /etc/apt/keyrings/claude-code.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
+    && echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/latest latest main" \
     > /etc/apt/sources.list.d/claude-code.list \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
