@@ -46,6 +46,7 @@ The `Dockerfile` is split into two stages: `base` (the template's own tooling) a
 | ------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `tini`                    | Init process - ensures clean signal handling and zombie process reaping (used as the container's default `CMD`) |
 | `git`                     | Version control - used by Claude Code's built-in git operations (commit, diff, log, etc.)          |
+| `bash-completion`         | Tab-completion framework - enables shell tab-completion, including git subcommands/branches (via git's own completion script) |
 | `gh`                      | GitHub CLI - used by Claude Code for PR/issue workflows (create PRs, view issues, etc.)            |
 | `ripgrep`                 | Fast file search - Claude Code's Grep tool uses `rg` for significantly faster codebase searches    |
 | `tzdata`                  | Timezone data - required for `ENV TZ` to take effect                                               |
