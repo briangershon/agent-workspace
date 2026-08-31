@@ -57,6 +57,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     #     not strictly required, but broadly useful ---
     tini \
     git \
+    bash-completion \
     gh \
     ripgrep \
     tzdata \
